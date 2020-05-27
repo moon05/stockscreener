@@ -1,0 +1,129 @@
+<html>
+
+	<header>
+		<title> Watchlist Page</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
+
+		<script src="https://unpkg.com/d3"></script>
+<!-- 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"> </script>
+ -->		<script src="https://unpkg.com/d3fc"></script>
+
+
+		<style type="text/css">
+			
+			
+		</style>
+	</header>
+
+	<body class="#212121 grey darken-4 white-text">
+		<main>
+			<div class="#212121 grey darken-4 center" id="banner" style="padding-top: 10px; padding-bottom: 20px; height: 100px">
+
+				<h3>D3 Chart pleabeans!!</h3>
+			</div>
+			<div class="container">
+
+				<div class="row">
+					<div id="chart-element" style="height: 500px"></div>
+				</div>
+					
+
+			</div>
+			
+		</main>
+
+		<script type="text/javascript">
+			var checkedStocks = "FB"
+			var query = `?symbols=${checkedStocks}`	
+
+			function getData(queryString){
+				var result = false;
+				jQuery.ajax({
+					url: '/watchlist' + queryString,
+					success: function(returnedBarset){
+						result = returnedBarset;
+					},
+ 					async: false
+				});
+
+
+				return result;
+			}
+
+
+
+			data = getData(query)["FB"];
+			console.log(data);
+			function convertToData(a) {
+				l = new Date(0); 
+				l.setUTCSeconds(a); 
+				return l;
+			}
+
+			console.log(convertToData(1589300340));
+			
+			// const loadDataEndOfDay = d3.csv(data, d => ({
+			// 	date: new Date(d.t * 1000),
+			// 	volume: Number(d.v),
+			// 	high: Number(d.h),
+			// 	low: Number(d.l),
+			// 	open: Number(d.o),
+			// 	close: Number(d.c)
+			// }));
+
+			// const data = fc.randomFinancial()(50);
+
+// const yExtent = fc.extentLinear().accessors([d => d.highPrice, d => d.lowPrice]);
+
+// const xExtent = fc.extentDate().accessors([d => {l=new Date(0); l.setUTCSeconds(d.startEpochTime); return l;}]);
+
+// const gridlines = fc.annotationSvgGridline();
+// const candlestick = fc.seriesSvgCandlestick();
+// const multi = fc.seriesSvgMulti().series([gridlines, candlestick]);
+
+// const chart = fc
+//     .chartCartesian(d3.scaleTime(), d3.scaleLinear())
+//     .yDomain(yExtent(data))
+//     .xDomain(xExtent(data))
+//     .svgPlotArea(multi);
+
+// d3.select('#chart-element')
+//     .datum(data)
+//     .call(chart);
+
+			const xExtent = fc.extentDate()
+  				.accessors([d => {l=new Date(0); l.setUTCSeconds(d.startEpochTime); return l;}]);
+  			const yExtent = fc.extentLinear()
+  				.pad([0.1, 0.1])
+  				.accessors([d => d.highPrice, d => d.lowPrice]);
+
+  			const lineSeries = fc
+  				.seriesSvgLine()
+  				.mainValue(d => d.highPrice)
+  				.crossValue(d => {l=new Date(0); l.setUTCSeconds(d.startEpochTime); return l;});
+
+  			const chart = fc
+				.chartCartesian(d3.scaleTime(), d3.scaleLinear())
+				.yOrient("right")
+				.yDomain(yExtent(data))
+				.xDomain(xExtent(data))
+ 				.svgPlotArea(lineSeries);
+
+ 			d3.select("#chart-element")
+				.datum(data)
+				.call(chart);
+			
+
+
+
+		</script>
+	</body>
+	<footer>
+		
+	</footer>
+</html>

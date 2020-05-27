@@ -1,0 +1,100 @@
+<html>
+
+	<header>
+		<title> Index Page</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
+
+		<style type="text/css">
+			
+			.stockButton {
+				margin-right: 10px;
+				margin-top: 5px;
+				margin-bottom: 7px; 
+				opacity: .5;
+			}
+
+			.opaque {
+				opacity: 1;
+			}
+
+		</style>
+
+	</header>
+
+	<body class="#212121 grey darken-4 white-text">
+		<main>
+			<div class="container">
+				<div class="row" id="heading">
+					<div class="col s12 center" style="padding-top: 50px;">
+						<h3> Welcome to stock screener! </h3>
+					</div>
+				</div>
+				<div class="row center" id="stockExamples">
+					<div class="col s8 offset-s2 center">
+						<h5> You can choose from some of the stocks below!</h5>
+						
+					</div>
+					<div class="col s8 center push-s2" id="stockNames" style="padding-top: 40px;">
+
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="FB">Facebook</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="F">Ford</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="S">Sprint</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="SAVE">Spirit Airways</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="DBX">Dropbox</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="AAL">American Airlines</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2"data-stock-symbol="SFIX">Stitch Fix</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="SNAP">Snap</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="SPOT">Spotify</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="COF">CapitalOne</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="BYND">Beyond Meat</a>
+						<a class="btn stockButton #455a64 blue-grey darken-2" data-stock-symbol="AMZN">Amazon</a>
+						
+					</div>
+
+				</div>
+				<div class="row" id="nextPage" style="padding-top: 20px;">
+					<div class="col s12 center">
+						<a class="btn-large #455a64 blue-grey darken-2" onclick="nextButtonClick()">Next Page</a>
+					</div>
+				</div>
+			</div>
+
+			
+		</main>
+
+		<script type="text/javascript">
+
+			$('a').click(function(){
+				$(this).toggleClass("opaque");
+			})
+
+			var names = "";
+
+			var d = document.getElementById("stockNames");
+			console.log(d);
+			for (i=0; i<d.children.length; i++) {
+				d.children[i].addEventListener("click", addToNames)
+			}
+			function addToNames(e) {
+				names += e.currentTarget.getAttribute("data-stock-symbol");
+				names += ",";
+			}
+			
+			function nextButtonClick() {
+				localStorage.symbols = names;
+				location.href  = "watchlist.html"
+			}
+
+
+		</script>
+	</body>
+	<footer>
+		
+	</footer>
+</html>

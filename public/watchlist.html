@@ -1,0 +1,231 @@
+<html>
+
+	<header>
+		<title> Watchlist Page</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
+
+
+		<style type="text/css">
+			#currDiv {
+				height: 25px;
+				width: 90px; 
+				padding-left: 5px;
+				padding-right: 5px;
+				padding-top: 2px;
+				padding-bottom: 2px;
+				text-align: right;
+				border-radius: 2px;
+			}
+
+			#openDiv {
+				height: 25px;
+				width: 90px; 
+				margin-left: 40px;
+				padding-right: 5px;
+			}
+
+			#lowDiv {
+				height: 25px;
+				width: 90px; 
+				margin-left: 40px;
+				padding-right: 5px;
+			}
+
+			#highDiv {
+				height: 25px;
+				width: 90px; 
+				margin-left: 40px;
+				padding-right: 5px;
+			}
+
+			#fullnameDiv {
+				height: 25px;
+				width: 170px; 
+				padding-top: 4px;
+				font-size: 12px;
+			}
+		</style>
+	</header>
+
+	<body class="#212121 grey darken-4 white-text">
+		<main>
+			<div class="#212121 grey darken-4 center" id="banner" style="padding-top: 10px; padding-bottom: 20px; height: 100px">
+
+				<h3>We will soon add chart functionalities!!</h3>
+			</div>
+			<div class="container">
+
+				<div class="row">
+					<div class="col s12 white-text" id="watchlistHeader">
+						<span class="left"><h3>Watchlist</h3></span>
+					</div>
+					<div class="divider col s12 center #424242 grey"></div>
+					
+					<div class="col s12 center" id="stockTableHolder" style="padding-top: 20px; padding-bottom: 20px">
+						<table class="col s12 center" id="stockTable">
+							<thead>
+								<tr class="grey-text darken-4">
+									<th class="left">Symbols</th>
+									<th class="center">Open</th>
+									<th class="center">Low</th>
+									<th class="center">High</th>
+									<th class="right">Current</th>
+								</tr>
+							</thead>
+							<tbody id="stockTableBody">
+								
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+
+			</div>
+			
+		</main>
+
+		<script type="text/javascript">
+			var checkedStocks = localStorage.symbols
+			var query = `?symbols=${checkedStocks}`	
+			
+
+			function getData(queryString){
+				var result = false;
+				jQuery.ajax({
+					url: '/watchlist' + queryString,
+					success: function(returnedBarset){
+						result = returnedBarset;
+					},
+ 					async: false
+				});
+
+
+				return result;
+			}
+
+
+			function getJsonData() {
+				var result = false;
+				$.ajax({
+					url: '../symbolToStock.json',
+					async: false,
+					dataType: 'json',
+					success: function (response) {
+						result = response;
+					}
+				});
+
+				return result;
+			}
+
+			var a = getJsonData();
+			console.log(a);
+
+
+
+			function generateTableRows(stock_data_dict, json_data){
+				for (k in stock_data_dict) {
+					var table = document.getElementById("stockTableBody");
+					var row = table.insertRow(-1);
+
+					row.setAttribute("id", "eachRow");
+					row.style.borderBottomColor = "#424242";
+					var cell1 = row.insertCell(0);
+					var cell2 = row.insertCell(1);
+					var cell3 = row.insertCell(2);
+					var cell4 = row.insertCell(3);
+					var cell5 = row.insertCell(4);
+					
+					//for the name sides
+					var nameDiv = document.createElement("div");
+					var symbolDiv = document.createElement("div");
+					var fullnameDiv = document.createElement("div");
+
+					len = stock_data_dict[k].length - 1;
+
+
+					nameDiv.setAttribute("class", "row");
+					nameDiv.setAttribute("class", "left");
+					nameDiv.appendChild(symbolDiv);
+					nameDiv.appendChild(fullnameDiv);
+
+					nameDiv.setAttribute("id", "nameDiv");
+					symbolDiv.setAttribute("id", "symbolDiv");
+					fullnameDiv.setAttribute("id", "fullnameDiv");
+					fullnameDiv.setAttribute("class", "grey-text darken-4");
+					symbolDiv.innerHTML = k;
+					fullnameDiv.innerHTML = json_data[k];
+
+					var openDiv = document.createElement("div");
+					openDiv.setAttribute("id", "openDiv");
+					openDiv.setAttribute("class", "center");
+					openDiv.innerHTML = stock_data_dict[k][len]["openPrice"];
+					openDiv.style.borderRight = "#e65100 solid thick";
+					openDiv.style.borderLeft = "#e65100 solid thick";	
+					openDiv.style.borderRadius = "5px";
+
+					var lowDiv = document.createElement("div");
+					lowDiv.setAttribute("id", "lowDiv");
+					lowDiv.setAttribute("class", "center");
+					lowDiv.innerHTML = stock_data_dict[k][len]["lowPrice"];
+					lowDiv.style.borderRight = "#e65100 solid thick";
+					lowDiv.style.borderLeft = "#e65100 solid thick";	
+					lowDiv.style.borderRadius = "5px";
+
+					var highDiv = document.createElement("div");
+					highDiv.setAttribute("id", "highDiv");
+					highDiv.setAttribute("class", "center");
+					highDiv.innerHTML = stock_data_dict[k][len]["highPrice"];
+					highDiv.style.borderRight = "#e65100 solid thick";
+					highDiv.style.borderLeft = "#e65100 solid thick";	
+					highDiv.style.borderRadius = "5px";
+					
+					var currDiv = document.createElement("div");
+					currDiv.setAttribute("id", "currDiv");
+					currDiv.setAttribute("class", "right");
+					currDiv.style.borderRight = "#e65100 solid thick";	
+					currDiv.style.borderRadius = "5px";
+					
+					currDiv.innerHTML = stock_data_dict[k][len]["closePrice"];
+					
+					cell1.appendChild(nameDiv);
+					cell2.appendChild(openDiv);
+					cell3.appendChild(lowDiv);
+					cell4.appendChild(highDiv);
+					cell5.appendChild(currDiv);
+
+				}
+			}
+
+			function updateTable(j) {
+				$("#stockTable tbody tr").remove();
+				var data = getData(query);
+				generateTableRows(data, j);
+				console.log("Re-Generated Table");
+			}
+
+			window.onload = function() {
+
+				console.log("Query:"+query);
+				var data = getData(query);
+				j = getJsonData()
+				generateTableRows(data, j);
+				console.log("Generated Table");
+				setInterval(updateTable, 10000, j);
+
+			}
+    
+
+
+
+		</script>
+	</body>
+	<footer>
+		
+	</footer>
+</html>
